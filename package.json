@@ -12,7 +12,8 @@
     "e2e": "playwright test",
     "icons": "node tools/gen-icons.mjs",
     "web": "node tools/serve.mjs",
-    "dist": "electron-builder --win"
+    "dist": "electron-builder --win",
+    "deploy:web": "git subtree push --prefix web origin gh-pages"
   },
   "devDependencies": {
     "@playwright/test": "1.64.0",
