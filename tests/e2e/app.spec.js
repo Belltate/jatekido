@@ -48,3 +48,25 @@ test('a Leállítás megerősítést kér: Mégse után megy tovább, Igen után
   expect(errors).toEqual([]);
   await app.close();
 });
+
+test('a Szünet megállítja mindkét időzítőt, a Folytatás onnan viszi tovább', async () => {
+  const { app, win, errors } = await launch();
+  await fillSetup(win, { names: ['Anna', 'Bence'], total: [0, 0, 30], turn: [0, 0, 10] });
+  await win.click('#start');
+  await win.click('#pause');
+  await expect(win.locator('#pause')).toHaveText('Folytatás');
+  await expect(win.locator('#paused-label')).toBeVisible();
+
+  const total = await win.locator('#total-time').textContent();
+  const turn = await win.locator('#turn-time').textContent();
+  await win.waitForTimeout(2500);
+  await expect(win.locator('#total-time')).toHaveText(total);
+  await expect(win.locator('#turn-time')).toHaveText(turn);
+
+  await win.click('#pause');
+  await expect(win.locator('#pause')).toHaveText('Szünet');
+  await expect(win.locator('#paused-label')).toBeHidden();
+  await expect(win.locator('#total-time')).not.toHaveText(total, { timeout: 3000 });
+  expect(errors).toEqual([]);
+  await app.close();
+});
