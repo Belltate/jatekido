@@ -7,9 +7,14 @@
   "author": "eleke",
   "type": "module",
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "start": "node tools/start.mjs",
+    "e2e": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "electron": "44.7.0",
     "vitest": "4.1.11"
-  }
+  },
+  "main": "electron/main.cjs"
 }
