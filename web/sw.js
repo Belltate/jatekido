@@ -2,7 +2,7 @@
 // és közben a háttérben frissíti, így a következő megnyitáskor már az új verzió fut.
 // Új fájl a web/ mappában → kerüljön az ASSETS-be is (a tests/pwa.test.js ellenőrzi).
 // Új kiadásnál növeld a CACHE számát.
-const CACHE = 'jatekido-v1';
+const CACHE = 'jatekido-v2';
 const ASSETS = [
   "./",
   "index.html",

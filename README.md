@@ -4,7 +4,7 @@ Időzítő, ami körbeforgatja a neveket. Megadsz néhány nevet, egy teljes id�
 
 - kicsiben látszik, mennyi van hátra a teljes időből;
 - nagyban látszik, ki van soron, és mennyi van még hátra a köréből;
-- amikor a kör letelik, sípol, és jön a következő név (a lista végén újra az első);
+- amikor a kör letelik, sípol, és egy átlátszó fátyol jelenik meg: **„Kattints a képernyőre”**. Alatta már a következő név látszik (a lista végén újra az első). Az ő ideje és a teljes idő is csak kattintásra (gépen Enterre vagy szóközre) indul, így az átadás senkinek az idejéből nem megy el;
 - amikor a teljes idő is letelik, kiírja: **Letelt az idő!**
 
 Gombok:
@@ -14,7 +14,7 @@ Gombok:
 
 ## Telepítés
 
-**Windows:** a `Jatekido-Eloszto-Setup-1.0.0.exe` telepítővel (Next → Install).
+**Windows:** a `Jatekido-Eloszto-Setup-1.1.0.exe` telepítővel (Next → Install). A régebbi verzióra rá lehet telepíteni.
 
 - Mivel a program nincs digitálisan aláírva, letöltés után a Windows figyelmeztethet („A Windows megvédte a számítógépet”): **További információ → Futtatás mindenképp**.
 - A Google Drive azt írhatja, hogy a fájl túl nagy a vírusellenőrzéshez: **Letöltés mindenképp**.

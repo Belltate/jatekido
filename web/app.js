@@ -5,12 +5,14 @@ import { playEndSound, playTurnSound, unlockAudio } from './sound.js';
 import {
   buildConfig,
   elapsedMs,
+  isHandover,
   isPaused,
   pauseSession,
   resumeSession,
   snapshot,
   soundBetween,
   startSession,
+  stopAtTurnEnd,
 } from './timer.js';
 import { keepAwake } from './wakelock.js';
 
@@ -35,7 +37,10 @@ function readForm() {
 }
 
 function render() {
-  const snap = snapshot(session.config, elapsedMs(session, Date.now()));
+  const now = Date.now();
+  const wasWaiting = isHandover(session);
+  session = stopAtTurnEnd(session, now);
+  const snap = snapshot(session.config, elapsedMs(session, now));
   const sound = last ? soundBetween(last, snap) : null;
   if (sound === 'turn') playTurnSound();
   if (sound === 'end') playEndSound();
@@ -43,7 +48,16 @@ function render() {
   $('total-time').textContent = formatClock(snap.totalRemainingMs);
   $('current-name').textContent = snap.name;
   $('turn-time').textContent = formatClock(snap.turnRemainingMs);
+  $('handover').hidden = !isHandover(session);
+  // most jelent meg: kapja meg a fókuszt, hogy gépen Enterrel vagy szóközzel is indítható legyen
+  if (isHandover(session) && !wasWaiting) $('handover').focus();
   if (snap.finished) end('done');
+}
+
+/** A fátylon kattintás: indul a következő ember köre. */
+function startNextTurn() {
+  session = resumeSession(session, Date.now());
+  render();
 }
 
 function askStop(ask) {
@@ -91,6 +105,7 @@ function end(screen) {
 
 $('setup-form').addEventListener('submit', start);
 $('pause').addEventListener('click', togglePause);
+$('handover').addEventListener('click', startNextTurn);
 $('stop').addEventListener('click', () => askStop(true));
 $('stop-no').addEventListener('click', () => askStop(false));
 $('stop-yes').addEventListener('click', () => end('setup'));

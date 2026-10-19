@@ -1,24 +1,48 @@
 import { expect, test } from '@playwright/test';
 import { fillSetup, launch } from './helpers.js';
 
-test('a nevek körbe forognak, amíg le nem telik a teljes idő', async () => {
+test('a nevek körbe forognak; váltáskor a következő ideje kattintásra indul', async () => {
   const { app, win, errors } = await launch();
   await fillSetup(win, { names: ['Anna', 'Bence', 'Csaba'], total: [0, 0, 8], turn: [0, 0, 2] });
   await win.click('#start');
 
   const name = win.locator('#current-name');
+  const veil = win.locator('#handover');
   await expect(name).toHaveText('Anna');
+  await expect(veil).toBeHidden();
   await expect(win.locator('#total-time')).toHaveText(/^0:0[78]$/);
   await expect(win.locator('#turn-time')).toHaveText(/^0:0[12]$/);
-  await expect(name).toHaveText('Bence', { timeout: 4000 });
-  await expect(name).toHaveText('Csaba', { timeout: 4000 });
-  await expect(name).toHaveText('Anna', { timeout: 4000 });
+  for (const next of ['Bence', 'Csaba', 'Anna']) {
+    await expect(veil).toBeVisible({ timeout: 4000 });
+    await expect(veil).toHaveText('Kattints a képernyőre');
+    await expect(name).toHaveText(next);
+    await expect(win.locator('#turn-time')).toHaveText('0:02');
+    await veil.click();
+    await expect(veil).toBeHidden();
+  }
   await expect(win.locator('#done')).toBeVisible({ timeout: 4000 });
   await expect(win.locator('#done')).toContainText('Letelt az idő!');
 
   await win.click('#again');
   await expect(win.locator('#setup')).toBeVisible();
   await expect(win.locator('#names')).toHaveValue('Anna\nBence\nCsaba');
+  expect(errors).toEqual([]);
+  await app.close();
+});
+
+test('átadás közben egyik idő sem fogy; Enterrel is indítható a következő kör', async () => {
+  const { app, win, errors } = await launch();
+  await fillSetup(win, { names: ['Anna', 'Bence'], total: [0, 0, 30], turn: [0, 0, 2] });
+  await win.click('#start');
+  const veil = win.locator('#handover');
+  await expect(veil).toBeVisible({ timeout: 4000 });
+  await expect(win.locator('#total-time')).toHaveText('0:28');
+  await win.waitForTimeout(2500);
+  await expect(win.locator('#total-time')).toHaveText('0:28');
+  await expect(win.locator('#turn-time')).toHaveText('0:02');
+  await win.keyboard.press('Enter');
+  await expect(veil).toBeHidden();
+  await expect(win.locator('#turn-time')).toHaveText('0:01', { timeout: 3000 });
   expect(errors).toEqual([]);
   await app.close();
 });

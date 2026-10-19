@@ -93,3 +93,23 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
 .install summary { cursor: pointer; color: var(--text); }
 .install ul { padding-left: 1.2rem; }
 .install li { margin: 0.4rem 0; }
+
+/* --- átadás: a fátyol alatt látszik a következő név, az ideje kattintásra indul --- */
+.handover {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 1.5rem max(14vh, 2rem);
+  font-size: clamp(1.6rem, 6vw, 3.5rem);
+  font-weight: 800;
+  color: var(--accent);
+  background: rgba(16, 20, 24, 0.72);
+  border: 0;
+  border-radius: 0;
+}
+.handover:focus-visible { outline: none; }
+/* a fátyol alatt csak a következő név és ideje látsszon, a gombok ne */
+#run:has(#handover:not([hidden])) .controls { visibility: hidden; }

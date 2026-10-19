@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildConfig,
   elapsedMs,
+  isHandover,
   isPaused,
   parseNames,
   pauseSession,
@@ -9,6 +10,7 @@ import {
   snapshot,
   soundBetween,
   startSession,
+  stopAtTurnEnd,
   toMs,
 } from '../web/timer.js';
 
@@ -156,5 +158,64 @@ describe('soundBetween', () => {
   });
   it('ha közben több kör is eltelt (pl. lezárt telefon), csak egyszer szól', () => {
     expect(soundBetween(snapshot(c, 100), snapshot(c, 4100))).toBe('turn');
+  });
+});
+
+describe('átadás: a kör végén a menet megáll, a következő ideje kattintásra indul', () => {
+  const c = cfg(['Anna', 'Bence', 'Csaba'], 6000, 2000);
+
+  it('a kör vége előtt nem áll meg', () => {
+    const s = stopAtTurnEnd(startSession(c, 0), 1999);
+    expect(isPaused(s)).toBe(false);
+    expect(isHandover(s)).toBe(false);
+  });
+
+  it('a kör végén átadásra vár: a következő név látszik, teljes körrel', () => {
+    const s = stopAtTurnEnd(startSession(c, 0), 2000);
+    expect(isHandover(s)).toBe(true);
+    expect(snapshot(c, elapsedMs(s, 2000))).toMatchObject({ name: 'Bence', turnRemainingMs: 2000 });
+  });
+
+  it('átadás közben egyik idő sem fogy, akkor sem, ha későn vette észre', () => {
+    const s = stopAtTurnEnd(startSession(c, 0), 2500);
+    expect(elapsedMs(s, 2500)).toBe(2000);
+    expect(elapsedMs(s, 60_000)).toBe(2000);
+  });
+
+  it('kattintás (folytatás) után onnan indul a következő kör', () => {
+    let s = stopAtTurnEnd(startSession(c, 0), 2000);
+    s = resumeSession(s, 9000);
+    expect(isHandover(s)).toBe(false);
+    expect(elapsedMs(s, 9500)).toBe(2500);
+    expect(snapshot(c, elapsedMs(s, 9500)).name).toBe('Bence');
+  });
+
+  it('a következő kör végén újra megáll', () => {
+    let s = resumeSession(stopAtTurnEnd(startSession(c, 0), 2000), 9000);
+    expect(isHandover(stopAtTurnEnd(s, 10_999))).toBe(false);
+    s = stopAtTurnEnd(s, 11_000);
+    expect(isHandover(s)).toBe(true);
+    expect(snapshot(c, elapsedMs(s, 11_000)).name).toBe('Csaba');
+  });
+
+  it('ha közben több kör is eltelt volna (lezárt telefon), az első határon áll meg', () => {
+    const s = stopAtTurnEnd(startSession(c, 0), 5000);
+    expect(elapsedMs(s, 5000)).toBe(2000);
+    expect(snapshot(c, elapsedMs(s, 5000)).name).toBe('Bence');
+  });
+
+  it('a teljes idő végén nincs átadás, hanem vége', () => {
+    let s = startSession(c, 0);
+    s = resumeSession(stopAtTurnEnd(s, 2000), 2000);
+    s = resumeSession(stopAtTurnEnd(s, 4000), 4000);
+    s = stopAtTurnEnd(s, 6000);
+    expect(isHandover(s)).toBe(false);
+    expect(snapshot(c, elapsedMs(s, 6000)).finished).toBe(true);
+  });
+
+  it('kézi szünetben nem vált át', () => {
+    const s = stopAtTurnEnd(pauseSession(startSession(c, 0), 1000), 5000);
+    expect(isHandover(s)).toBe(false);
+    expect(elapsedMs(s, 5000)).toBe(1000);
   });
 });

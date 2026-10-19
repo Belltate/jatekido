@@ -12,7 +12,11 @@ test('telefonon is körbe forognak a nevek, és semmi nem lóg ki oldalra', asyn
   await page.click('#start');
   await expect(page.locator('#current-name')).toHaveText('Anna');
   expect(await noSideScroll(page)).toBe(true);
-  await expect(page.locator('#current-name')).toHaveText('Bence', { timeout: 4000 });
+  await expect(page.locator('#handover')).toBeVisible({ timeout: 4000 });
+  await expect(page.locator('#current-name')).toHaveText('Bence');
+  expect(await noSideScroll(page)).toBe(true);
+  await page.tap('#handover');
+  await expect(page.locator('#handover')).toBeHidden();
   await expect(page.locator('#done')).toBeVisible({ timeout: 4000 });
 });
 
@@ -25,7 +29,7 @@ test('egyszeri megnyitás után internet nélkül is betölt', async ({ page, co
   await page.goto('/');
   const cached = await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
-    const cache = await caches.open('jatekido-v1');
+    const cache = await caches.open('jatekido-v2');
     return (await cache.keys()).length;
   });
   expect(cached).toBeGreaterThanOrEqual(13);

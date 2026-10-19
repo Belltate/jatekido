@@ -53,9 +53,9 @@ export function snapshot(config, ms) {
   };
 }
 
-/** Új menet, ami `now`-kor indul. */
+/** Új menet, ami `now`-kor indul. `turn`: az utolsó elindított kör sorszáma; `handover`: átadásra vár. */
 export function startSession(config, now) {
-  return { config, startedAt: now, pausedAt: null, pausedMs: 0 };
+  return { config, startedAt: now, pausedAt: null, pausedMs: 0, turn: 0, handover: false };
 }
 
 /** Az indulás óta eltelt idő a szünetek nélkül; szünetben nem nő. */
@@ -74,7 +74,24 @@ export function pauseSession(session, now) {
 
 export function resumeSession(session, now) {
   if (!isPaused(session)) return session;
-  return { ...session, pausedAt: null, pausedMs: session.pausedMs + (now - session.pausedAt) };
+  return { ...session, pausedAt: null, pausedMs: session.pausedMs + (now - session.pausedAt), handover: false };
+}
+
+export function isHandover(session) {
+  return session.handover;
+}
+
+/**
+ * Ha futás közben letelt a soron lévő kör, és van még a teljes időből, a menet pontosan a kör határán
+ * megáll, és átadásra vár: a következő ember ideje csak kattintásra (resumeSession) indul.
+ * Ha közben több kör is eltelt volna (pl. lezárt telefon), akkor is az első határon áll meg.
+ */
+export function stopAtTurnEnd(session, now) {
+  if (isPaused(session)) return session;
+  const boundary = (session.turn + 1) * session.config.turnMs;
+  const elapsed = elapsedMs(session, now);
+  if (boundary >= session.config.totalMs || elapsed < boundary) return session;
+  return { ...session, pausedAt: now - (elapsed - boundary), handover: true, turn: session.turn + 1 };
 }
 
 /**
