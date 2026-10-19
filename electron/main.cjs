@@ -12,6 +12,7 @@ function createWindow() {
     backgroundColor: '#101418',
     title: 'Játékidő Elosztó',
     show: false,
+    icon: path.join(__dirname, '..', 'web', 'icons', 'icon-512.png'),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
