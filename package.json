@@ -11,11 +11,13 @@
     "start": "node tools/start.mjs",
     "e2e": "playwright test",
     "icons": "node tools/gen-icons.mjs",
-    "web": "node tools/serve.mjs"
+    "web": "node tools/serve.mjs",
+    "dist": "electron-builder --win"
   },
   "devDependencies": {
     "@playwright/test": "1.64.0",
     "electron": "44.7.0",
+    "electron-builder": "26.15.3",
     "vitest": "4.1.11"
   },
   "main": "electron/main.cjs"

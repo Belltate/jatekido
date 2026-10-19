@@ -1,0 +1,33 @@
+# Windows-telepítő: `npm run dist` → release/Jatekido-Eloszto-Setup-<verzió>.exe
+appId: hu.eleke.jatekido
+productName: Játékidő Elosztó
+executableName: Jatekido
+directories:
+  output: release
+  buildResources: build
+# A program csak ezekből áll; futásidejű npm-függőség nincs.
+files:
+  - electron/**
+  - web/**
+  - package.json
+# Csak a magyar és az angol Chromium-nyelvi fájl kell (kisebb telepítő).
+electronLanguages:
+  - hu
+  - en-US
+asar: true
+npmRebuild: false
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: build/icon.png
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Játékidő Elosztó
+  runAfterFinish: true
+  artifactName: Jatekido-Eloszto-Setup-${version}.${ext}

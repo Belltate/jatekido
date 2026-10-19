@@ -13,7 +13,9 @@ export async function launch() {
   const env = { ...process.env };
   // a VS Code-ból indított folyamatok öröklik; vele az Electron sima Node-ként futna
   delete env.ELECTRON_RUN_AS_NODE;
-  const app = await electron.launch({ args: [ROOT], env });
+  // JATEKIDO_EXE=release/win-unpacked/Jatekido.exe: a becsomagolt programot teszteli a forrás helyett
+  const exe = process.env.JATEKIDO_EXE;
+  const app = await electron.launch(exe ? { executablePath: resolve(ROOT, exe), args: [], env } : { args: [ROOT], env });
   const win = await app.firstWindow();
   const errors = [];
   win.on('pageerror', (err) => errors.push(err.message));
