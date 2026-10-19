@@ -70,3 +70,11 @@ test('a Szünet megállítja mindkét időzítőt, a Folytatás onnan viszi tov�
   expect(errors).toEqual([]);
   await app.close();
 });
+
+test('az asztali programban nincs telepítési súgó', async () => {
+  const { app, win, errors } = await launch();
+  await expect(win.locator('#install-help')).toHaveCount(1);
+  await expect(win.locator('#install-help')).toBeHidden();
+  expect(errors).toEqual([]);
+  await app.close();
+});

@@ -8,6 +8,12 @@
       content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'"
     />
     <title>Játékidő Elosztó</title>
+    <meta name="theme-color" content="#101418" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Játékidő" />
     <link rel="stylesheet" href="styles.css" />
     <script type="module" src="app.js"></script>
   </head>
@@ -40,6 +46,15 @@
           <p id="error" class="error" role="alert" hidden></p>
           <button id="start" type="submit" class="primary">Indítás</button>
         </form>
+        <details id="install-help" class="install" hidden>
+          <summary>Telepítés telefonra vagy gépre</summary>
+          <ul>
+            <li><strong>Android (Chrome):</strong> jobb felül a ⋮ menü → <em>Alkalmazás telepítése</em> vagy <em>Hozzáadás a kezdőképernyőhöz</em>.</li>
+            <li><strong>iPhone, iPad (Safari):</strong> a Megosztás gomb → <em>Főképernyőhöz adás</em>.</li>
+            <li><strong>Windows, Mac (Chrome, Edge):</strong> a címsor jobb szélén a telepítés ikon.</li>
+          </ul>
+          <p>Telepítés után internet nélkül is működik. Menet közben a kijelző ébren marad; ha mégis lezárod a telefont, a váltás hangja csak a feloldás után szól.</p>
+        </details>
       </section>
 
       <section id="run" class="screen" hidden>

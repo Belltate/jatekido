@@ -87,3 +87,9 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
 /* --- szünet --- */
 .paused { margin: 0 0 0.5rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
 .is-paused .name, .is-paused .turn { opacity: 0.45; }
+
+/* --- telepítési súgó (csak böngészőben) --- */
+.install { margin-top: 1rem; padding: 0 0.25rem; font-size: 0.95rem; color: var(--muted); }
+.install summary { cursor: pointer; color: var(--text); }
+.install ul { padding-left: 1.2rem; }
+.install li { margin: 0.4rem 0; }

@@ -99,3 +99,11 @@ $('again').addEventListener('click', () => show('setup'));
 document.addEventListener('visibilitychange', () => {
   if (session && document.visibilityState === 'visible') render();
 });
+
+// Böngészőben (nem az asztali programban): offline működés és telepítési súgó.
+const inDesktopApp = location.protocol === 'file:';
+const installed = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+$('install-help').hidden = inDesktopApp || installed;
+if (!inDesktopApp && 'serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}

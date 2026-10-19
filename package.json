@@ -10,7 +10,8 @@
     "test": "vitest run",
     "start": "node tools/start.mjs",
     "e2e": "playwright test",
-    "icons": "node tools/gen-icons.mjs"
+    "icons": "node tools/gen-icons.mjs",
+    "web": "node tools/serve.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.64.0",
