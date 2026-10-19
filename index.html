@@ -44,9 +44,11 @@
 
       <section id="run" class="screen" hidden>
         <p class="total">Hátralévő idő: <span id="total-time"></span></p>
+        <p id="paused-label" class="paused" hidden>Szünet</p>
         <p id="current-name" class="name" aria-live="polite"></p>
         <p id="turn-time" class="turn"></p>
         <div id="controls" class="controls">
+          <button id="pause" type="button" class="primary">Szünet</button>
           <button id="stop" type="button">Leállítás</button>
         </div>
         <div id="stop-confirm" class="controls" hidden>
