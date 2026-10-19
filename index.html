@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'"
+    />
+    <title>Játékidő Elosztó</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <main>
+      <section id="setup" class="screen">
+        <h1>Játékidő Elosztó</h1>
+        <form id="setup-form" novalidate>
+          <label for="names">Nevek <span class="hint">(soronként egy)</span></label>
+          <textarea id="names" rows="5" placeholder="Anna&#10;Bence&#10;Csaba" autocomplete="off" spellcheck="false"></textarea>
+
+          <fieldset>
+            <legend>Teljes idő</legend>
+            <div class="hms">
+              <label>óra <input id="total-h" type="number" min="0" step="1" value="3" inputmode="numeric" aria-label="Teljes idő, óra" /></label>
+              <label>perc <input id="total-m" type="number" min="0" step="1" value="0" inputmode="numeric" aria-label="Teljes idő, perc" /></label>
+              <label>mp <input id="total-s" type="number" min="0" step="1" value="0" inputmode="numeric" aria-label="Teljes idő, másodperc" /></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Váltás ideje <span class="hint">(ennyi ideig van soron egy név)</span></legend>
+            <div class="hms">
+              <label>óra <input id="turn-h" type="number" min="0" step="1" value="0" inputmode="numeric" aria-label="Váltás ideje, óra" /></label>
+              <label>perc <input id="turn-m" type="number" min="0" step="1" value="20" inputmode="numeric" aria-label="Váltás ideje, perc" /></label>
+              <label>mp <input id="turn-s" type="number" min="0" step="1" value="0" inputmode="numeric" aria-label="Váltás ideje, másodperc" /></label>
+            </div>
+          </fieldset>
+
+          <p id="error" class="error" role="alert" hidden></p>
+          <button id="start" type="submit" class="primary">Indítás</button>
+        </form>
+      </section>
+
+      <section id="run" class="screen" hidden>
+        <p class="total">Hátralévő idő: <span id="total-time"></span></p>
+        <p id="current-name" class="name" aria-live="polite"></p>
+        <p id="turn-time" class="turn"></p>
+        <div id="controls" class="controls">
+          <button id="stop" type="button">Leállítás</button>
+        </div>
+        <div id="stop-confirm" class="controls" hidden>
+          <span>Biztosan leállítod?</span>
+          <button id="stop-yes" type="button" class="danger">Igen, leállítom</button>
+          <button id="stop-no" type="button">Mégse</button>
+        </div>
+      </section>
+
+      <section id="done" class="screen" hidden>
+        <p class="done-title">Letelt az idő!</p>
+        <button id="again" type="button" class="primary">Új menet</button>
+      </section>
+    </main>
+  </body>
+</html>
